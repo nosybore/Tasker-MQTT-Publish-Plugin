@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Tasker-MQTT-Publish-Plugin.iml" filepath="$PROJECT_DIR$/Tasker-MQTT-Publish-Plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/locale/locale.iml" filepath="$PROJECT_DIR$/locale/locale.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mqttpublishplugin/mqttpublishplugin.iml" filepath="$PROJECT_DIR$/mqttpublishplugin/mqttpublishplugin.iml" />
+    </modules>
+  </component>
+</project>
