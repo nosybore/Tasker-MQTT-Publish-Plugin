@@ -15,22 +15,23 @@
 <resources>
 
     <!-- App name -->
-    <string name="app_name">Mqtter</string>
+    <string name="app_name">MQTT Publisher</string>
 
     <!-- Name of the plug-in that appears in Locale -->
-    <string name="plugin_name">Mqtter</string>
+    <string name="plugin_name">MQTT Publisher</string>
 
     <!-- Hint text in the toast edit text -->
-    <string name="setting_name">Setting name</string>
-    <string name="message_hint">Scheduled Toast</string>
-    <string name="broker_ip_hint">Enter server name</string>
-    <string name="broker_port_hint">Enter port</string>
-    <string name="username_hint">Enter Username</string>
-    <string name="password_hint">Enter Password</string>
-    <string name="message_topic_hint">Enter the topic</string>
-    <string name="message_payload_hint">Enter Payload</string>
+    <string name="setting_name">MQTT Settings</string>
+    <string name="message_hint">MQTT Message Settings</string>
+    <string name="broker_ip_hint">Server Address</string>
+    <string name="broker_port_hint">Port</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="message_topic_hint">Topic</string>
+    <string name="message_payload_hint">Payload</string>
     <string name="btn_accept">Accept</string>
     <string name="action_settings">Action Settings</string>
+    <string name="retain_flag">Retain Flag</string>
     
 
 </resources>

@@ -2,6 +2,7 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+/.idea/vcs.xml
 /build
 .DS_Store
 .DS_Store?

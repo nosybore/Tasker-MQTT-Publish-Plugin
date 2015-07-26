@@ -16,6 +16,7 @@ public final class FireReceiver extends BroadcastReceiver {
 	
 	private MqttClient client;
 	String mServer, mPort, mUsername, mPassword, mTopic, mPayload;
+    Boolean mRetain;
 	
 	class SendMqttMessage extends AsyncTask<Void, Void, Void> {
 
@@ -27,10 +28,10 @@ public final class FireReceiver extends BroadcastReceiver {
 
                 final MqttTopic messageTopic = client.getTopic(mTopic);
                 final MqttMessage message = new MqttMessage(String.valueOf(mPayload).getBytes());
-                
+                message.setRetained(mRetain);
                 messageTopic.publish(message);
                 
-                Log.d("Receiver", "Published data. Topic: " + messageTopic.getName() + "  Message: " + message);
+                Log.d("Receiver", "Published data. Topic: " + messageTopic.getName() + " Retain Flag: " + message.isRetained() + "  Message: " + message);
 
                 client.disconnect();
                 
@@ -56,6 +57,7 @@ public final class FireReceiver extends BroadcastReceiver {
         	mPassword = intent.getStringExtra("Password");
         	mTopic = intent.getStringExtra("Topic");
         	mPayload = intent.getStringExtra("Payload");
+            mRetain = intent.getBooleanExtra("Retain",false);
         	       	
         	final String BROKER_URL = "tcp://"+mServer+":"+mPort;
             

@@ -8,6 +8,7 @@ public class BundleExtraKeys {
 	public static final String PASSWORD = "Password";
 	public static final String TOPIC = "Topic";
 	public static final String PAYLOAD = "Payload";
+	public static final String RETAIN = "Retain";
 
 
 }
