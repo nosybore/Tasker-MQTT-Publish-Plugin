@@ -28,9 +28,7 @@
             android:id="@+id/broker_ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dip"
-            android:layout_marginRight="6dip"
-            android:layout_marginTop="8dip"
+            android:layout_margin="8dp"
             android:hint="@string/broker_ip_hint"
             android:layout_weight="1" />
 
@@ -38,11 +36,8 @@
             android:id="@+id/broker_port"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dip"
-            android:layout_marginRight="6dip"
-            android:layout_marginTop="8dip"
+            android:layout_margin="8dp"
             android:hint="@string/broker_port_hint"
-            android:inputType="number"
             android:layout_weight="0.25" />
     </LinearLayout>
 
@@ -56,9 +51,7 @@
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dip"
-            android:layout_marginRight="6dip"
-            android:layout_marginTop="8dip"
+            android:layout_margin="8dp"
             android:hint="@string/username_hint"
             android:layout_weight="1" />
 
@@ -66,10 +59,7 @@
             android:id="@+id/password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dip"
-            android:layout_marginRight="6dip"
-            android:layout_marginTop="8dip"
-            android:inputType="textPassword"
+            android:layout_margin="8dp"
             android:hint="@string/password_hint"
             android:layout_weight="1" />
     </LinearLayout>
@@ -78,37 +68,33 @@
         android:id="@+id/message_topic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="6dip"
-        android:layout_marginRight="6dip"
-        android:layout_marginTop="8dip"
+        android:layout_margin="8dp"
         android:hint="@string/message_topic_hint" />
     
     <EditText
         android:id="@+id/message_payload"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="6dip"
-        android:layout_marginRight="6dip"
-        android:layout_marginTop="8dip"
+        android:layout_height="0dp"
         android:hint="@string/message_payload_hint"
         android:inputType="textMultiLine"
         android:gravity="top"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1" />
+        android:layout_margin="8dp"
+        android:layout_weight="0.66" />
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/retain_flag"
         android:id="@+id/retain"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="8dp" />
 
     <Button
         android:id="@+id/btn_accept"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="finishActivity"
-        android:text="@string/btn_accept"
-        android:layout_margin="8dp" />
+        android:layout_margin="8dp"
+        android:text="@string/btn_accept" />
 
 </LinearLayout>
