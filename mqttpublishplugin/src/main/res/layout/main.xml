@@ -81,6 +81,29 @@
         android:layout_margin="8dp"
         android:layout_weight="0.66" />
 
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroupQoS"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <RadioButton
+            android:id="@+id/rbQoS0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QoS 0"/>
+        <RadioButton
+            android:id="@+id/rbQoS1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QoS 1" />
+        <RadioButton
+            android:id="@+id/rbQoS2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QoS 2" />
+    </RadioGroup>
+
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

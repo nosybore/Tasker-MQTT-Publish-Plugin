@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.CheckBox;
+import android.widget.RadioGroup;
 
 public class EditActivity extends Activity {
 	
@@ -14,6 +15,9 @@ public class EditActivity extends Activity {
 	EditText mServerText, mPortText, mUsernameText, mPasswordText, mTopicText, mPayloadText;
 	CheckBox mRetainCheck;
 	String[] mExtra;
+	private RadioGroup mRadioGroup;
+	private int mQoS;
+	private int mQoSID;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class EditActivity extends Activity {
 		mTopicText = (EditText) findViewById(R.id.message_topic);
 		mPayloadText = (EditText) findViewById(R.id.message_payload);
 		mRetainCheck = (CheckBox) findViewById(R.id.retain);
+		mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupQoS);
 		
 		if (savedInstanceState == null) {
 			if (localeBundle != null) {
@@ -41,6 +46,7 @@ public class EditActivity extends Activity {
 				mTopicText.setText(localeBundle.getString(BundleExtraKeys.TOPIC));
 				mPayloadText.setText(localeBundle.getString(BundleExtraKeys.PAYLOAD));
                 mRetainCheck.setChecked(localeBundle.getBoolean(BundleExtraKeys.RETAIN));
+				mRadioGroup.check(localeBundle.getInt(BundleExtraKeys.QOS));
 			}
 		}
 		setTitle("Settings");
@@ -56,7 +62,8 @@ public class EditActivity extends Activity {
 		mTopic = mTopicText.getText().toString();
 		mPayload = mPayloadText.getText().toString();
         mRetain = (mRetainCheck.isChecked());
-		
+		mQoSID = mRadioGroup.getCheckedRadioButtonId();
+
 		if (mServer.length() > 0 && mPort.length() > 0 && mTopic.length() > 0 && mPayload.length() > 0) {
 			Intent resultIntent = new Intent();
 			
@@ -68,6 +75,19 @@ public class EditActivity extends Activity {
 			bundle.putString(BundleExtraKeys.TOPIC, mTopic);
 			bundle.putString(BundleExtraKeys.PAYLOAD, mPayload);
             bundle.putBoolean(BundleExtraKeys.RETAIN, mRetain);
+			switch (mQoSID){
+				case R.id.rbQoS0:
+				default:
+					mQoS = 0;
+					break;
+				case R.id.rbQoS1:
+					mQoS = 1;
+					break;
+				case R.id.rbQoS2:
+					mQoS = 2;
+					break;
+			}
+			bundle.putInt(BundleExtraKeys.QOS, mQoSID);
 			resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, bundle);
 			
 			// Tasker's variable replacement
@@ -75,7 +95,7 @@ public class EditActivity extends Activity {
                 TaskerPlugin.Setting.setVariableReplaceKeys( bundle, new String [] { BundleExtraKeys.TOPIC, BundleExtraKeys.PAYLOAD } );
 			
 			// We define the blurb that will appear in the configuration
-			String blurb = mServer + ":" + mPort + " => " + mTopic;
+			String blurb = mServer + ":" + mPort + " => " + mTopic + " QoS:" + mQoS;
 			resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, blurb);
 			
 			setResult(RESULT_OK,resultIntent);

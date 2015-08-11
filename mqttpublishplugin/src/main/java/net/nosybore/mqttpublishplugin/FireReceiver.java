@@ -19,8 +19,9 @@ public final class FireReceiver extends BroadcastReceiver {
 	String mServer, mPort, mUsername, mPassword, mTopic, mPayload;
     Boolean mRetain;
     Integer nPort;
-	
-	class SendMqttMessage extends AsyncTask<Void, Void, Void> {
+    private int mQoS;
+
+    class SendMqttMessage extends AsyncTask<Void, Void, Void> {
 
 	    @Override
 		protected Void doInBackground(Void... v) {
@@ -31,12 +32,26 @@ public final class FireReceiver extends BroadcastReceiver {
                 final MqttMessage message = new MqttMessage(String.valueOf(mPayload).getBytes());
                 final MqttConnectOptions options = new MqttConnectOptions();
                 message.setRetained(mRetain);
-                options.setUserName(mUsername);
-                options.setPassword(mPassword.toCharArray());
+                switch (mQoS){
+                    case R.id.rbQoS0:
+                    default:
+                        message.setQos(0);
+                        break;
+                    case R.id.rbQoS1:
+                        message.setQos(1);
+                        break;
+                    case R.id.rbQoS2:
+                        message.setQos(2);
+                        break;
+                }
+                if(mUsername != null && !mUsername.trim().equals("")) {
+                    options.setUserName(mUsername);
+                    options.setPassword(mPassword.toCharArray());
+                }
                 client.connect(options);
                 messageTopic.publish(message);
 
-                Log.d("Receiver", "Published data. Topic: " + messageTopic.getName() + " Retain Flag: " + message.isRetained() + "  Message: " + message);
+                Log.d("Receiver", "Published data. Topic: " + messageTopic.getName() + " Retain Flag: " + message.isRetained() + "  Message: " + message + " QoS:" + message.getQos());
 
                 client.disconnect();
                 
@@ -62,7 +77,8 @@ public final class FireReceiver extends BroadcastReceiver {
         	mPassword = intent.getStringExtra("Password");
         	mTopic = intent.getStringExtra("Topic");
         	mPayload = intent.getStringExtra("Payload");
-            mRetain = intent.getBooleanExtra("Retain",false);
+            mRetain = intent.getBooleanExtra("Retain", false);
+            mQoS = intent.getIntExtra(BundleExtraKeys.QOS, 0);
         	       	
         	final String BROKER_URL = "tcp://"+mServer+":"+nPort;
             
