@@ -15,12 +15,35 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public final class FireReceiver extends BroadcastReceiver {
 	
-	private MqttClient client;
 	String mServer, mPort, mUsername, mPassword, mTopic, mPayload;
     Boolean mRetain;
-    Integer nPort;
+	private MqttClient client;
     private int mQoS;
 
+    @Override
+    public void onReceive(final Context context, final Intent intent) {
+
+        	mServer = intent.getStringExtra("Server");
+            mPort = intent.getStringExtra("Port");
+        	mUsername = intent.getStringExtra("Username");
+        	mPassword = intent.getStringExtra("Password");
+        	mTopic = intent.getStringExtra("Topic");
+        	mPayload = intent.getStringExtra("Payload");
+            mRetain = intent.getBooleanExtra("Retain", false);
+            mQoS = intent.getIntExtra(BundleExtraKeys.QOS, 0);
+
+        	final String BROKER_URL = "tcp://"+mServer+":"+mPort;
+
+            try {
+                client = new MqttClient(BROKER_URL, MqttClient.generateClientId(), new MemoryPersistence());
+            } catch (MqttException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+
+            new SendMqttMessage().execute();
+    }
+	
     class SendMqttMessage extends AsyncTask<Void, Void, Void> {
 
 	    @Override
@@ -54,7 +77,7 @@ public final class FireReceiver extends BroadcastReceiver {
                 Log.d("Receiver", "Published data. Topic: " + messageTopic.getName() + " Retain Flag: " + message.isRetained() + "  Message: " + message + " QoS:" + message.getQos());
 
                 client.disconnect();
-                
+
                 return null;
 
             } catch (MqttException e) {
@@ -67,28 +90,4 @@ public final class FireReceiver extends BroadcastReceiver {
 	    @Override
 		protected void onPostExecute(Void v) { }
 	}
-	
-    @Override
-    public void onReceive(final Context context, final Intent intent) {    
-    	
-        	mServer = intent.getStringExtra("Server");
-            nPort = Integer.parseInt(mPort = intent.getStringExtra("Port"));
-        	mUsername = intent.getStringExtra("Username");
-        	mPassword = intent.getStringExtra("Password");
-        	mTopic = intent.getStringExtra("Topic");
-        	mPayload = intent.getStringExtra("Payload");
-            mRetain = intent.getBooleanExtra("Retain", false);
-            mQoS = intent.getIntExtra(BundleExtraKeys.QOS, 0);
-        	       	
-        	final String BROKER_URL = "tcp://"+mServer+":"+nPort;
-            
-            try {
-                client = new MqttClient(BROKER_URL, MqttClient.generateClientId(), new MemoryPersistence());
-            } catch (MqttException e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
-            
-            new SendMqttMessage().execute();  
-    }
 }

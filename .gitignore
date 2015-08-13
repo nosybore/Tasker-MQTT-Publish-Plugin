@@ -12,3 +12,5 @@ ehthumbs.db
 Thumbs.db
 *.apk
 *.ap_
+.idea/copyright
+.idea/vcs.xml
