@@ -10,9 +10,9 @@ import android.widget.RadioGroup;
 
 public class EditActivity extends Activity {
 	
-	String mServer, mPort, mUsername, mPassword, mTopic, mPayload;
+	String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload;
     Boolean mRetain;
-	EditText mServerText, mPortText, mUsernameText, mPasswordText, mTopicText, mPayloadText;
+	EditText mServerText, mPortText, mClientIdText, mUsernameText, mPasswordText, mTopicText, mPayloadText;
 	CheckBox mRetainCheck;
 	String[] mExtra;
 	private RadioGroup mRadioGroup;
@@ -29,6 +29,7 @@ public class EditActivity extends Activity {
 		setContentView(R.layout.main);
 		mServerText = (EditText) findViewById(R.id.broker_ip);
 		mPortText = (EditText) findViewById(R.id.broker_port);
+		mClientIdText = (EditText) findViewById(R.id.client_id);
 		mUsernameText = (EditText) findViewById(R.id.username);
 		mPasswordText = (EditText) findViewById(R.id.password);
 		mTopicText = (EditText) findViewById(R.id.message_topic);
@@ -41,6 +42,7 @@ public class EditActivity extends Activity {
 				mExtra = localeBundle.getStringArray("Extra");
 				mServerText.setText(localeBundle.getString(BundleExtraKeys.SERVER));
 				mPortText.setText(localeBundle.getString(BundleExtraKeys.PORT));
+				mClientIdText.setText(localeBundle.getString(BundleExtraKeys.CLIENT_ID));
 				mUsernameText.setText(localeBundle.getString(BundleExtraKeys.USERNAME));
 				mPasswordText.setText(localeBundle.getString(BundleExtraKeys.PASSWORD));
 				mTopicText.setText(localeBundle.getString(BundleExtraKeys.TOPIC));
@@ -57,6 +59,7 @@ public class EditActivity extends Activity {
 		// We get the information for each field from the settings screen
 		mServer = mServerText.getText().toString();
 		mPort = mPortText.getText().toString();
+		mClientId = mClientIdText.getText().toString();
 		mUsername = mUsernameText.getText().toString();
 		mPassword = mPasswordText.getText().toString();
 		mTopic = mTopicText.getText().toString();
@@ -70,6 +73,7 @@ public class EditActivity extends Activity {
 			Bundle bundle = new Bundle();
 			bundle.putString(BundleExtraKeys.SERVER, mServer);
 			bundle.putString(BundleExtraKeys.PORT, mPort);
+			bundle.putString(BundleExtraKeys.CLIENT_ID, mClientId);
 			bundle.putString(BundleExtraKeys.USERNAME, mUsername);
 			bundle.putString(BundleExtraKeys.PASSWORD, mPassword);
 			bundle.putString(BundleExtraKeys.TOPIC, mTopic);

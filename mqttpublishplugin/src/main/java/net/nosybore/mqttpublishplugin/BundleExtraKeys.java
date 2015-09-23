@@ -4,6 +4,7 @@ public class BundleExtraKeys {
 	
 	public static final String SERVER = "Server";
 	public static final String PORT = "Port";
+	public static final String CLIENT_ID = "ClientID";
 	public static final String USERNAME = "Username";
 	public static final String PASSWORD = "Password";
 	public static final String TOPIC = "Topic";

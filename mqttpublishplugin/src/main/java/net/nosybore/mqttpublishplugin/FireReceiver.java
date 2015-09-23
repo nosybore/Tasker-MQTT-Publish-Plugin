@@ -15,16 +15,16 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public final class FireReceiver extends BroadcastReceiver {
 	
-	String mServer, mPort, mUsername, mPassword, mTopic, mPayload;
+	String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload;
     Boolean mRetain;
 	private MqttClient client;
     private int mQoS;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-
         	mServer = intent.getStringExtra("Server");
             mPort = intent.getStringExtra("Port");
+            mClientId = intent.getStringExtra("ClientID");
         	mUsername = intent.getStringExtra("Username");
         	mPassword = intent.getStringExtra("Password");
         	mTopic = intent.getStringExtra("Topic");
@@ -34,8 +34,13 @@ public final class FireReceiver extends BroadcastReceiver {
 
         	final String BROKER_URL = "tcp://"+mServer+":"+mPort;
 
+            // set a proper client id if we have none
+            if (mClientId == null || mClientId.trim().equals("")) {
+                mClientId = MqttClient.generateClientId();
+            }
+
             try {
-                client = new MqttClient(BROKER_URL, MqttClient.generateClientId(), new MemoryPersistence());
+                client = new MqttClient(BROKER_URL, mClientId, new MemoryPersistence());
             } catch (MqttException e) {
                 e.printStackTrace();
                 System.exit(1);
