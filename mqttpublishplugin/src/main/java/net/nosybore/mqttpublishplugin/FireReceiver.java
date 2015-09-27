@@ -13,10 +13,21 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+
 public final class FireReceiver extends BroadcastReceiver {
 	
-	String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload;
-    Boolean mRetain;
+	String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload, mProtocol;
+    Boolean mSSL, mRetain;
 	private MqttClient client;
     private int mQoS;
 
@@ -25,6 +36,7 @@ public final class FireReceiver extends BroadcastReceiver {
         	mServer = intent.getStringExtra("Server");
             mPort = intent.getStringExtra("Port");
             mClientId = intent.getStringExtra("ClientID");
+            mSSL = intent.getBooleanExtra("SSL", false);
         	mUsername = intent.getStringExtra("Username");
         	mPassword = intent.getStringExtra("Password");
         	mTopic = intent.getStringExtra("Topic");
@@ -32,7 +44,13 @@ public final class FireReceiver extends BroadcastReceiver {
             mRetain = intent.getBooleanExtra("Retain", false);
             mQoS = intent.getIntExtra(BundleExtraKeys.QOS, 0);
 
-        	final String BROKER_URL = "tcp://"+mServer+":"+mPort;
+            // select the protocol
+            if (mSSL) {
+                mProtocol = "ssl://";
+            } else {
+                mProtocol = "tcp://";
+            }
+            final String BROKER_URL = mProtocol + mServer + ":" + mPort;
 
             // set a proper client id if we have none
             if (mClientId == null || mClientId.trim().equals("")) {
@@ -76,6 +94,22 @@ public final class FireReceiver extends BroadcastReceiver {
                     options.setUserName(mUsername);
                     options.setPassword(mPassword.toCharArray());
                 }
+
+                // do we need a SSL connection?
+                if (mSSL) {
+                    // Create a TrustManager that trusts the CAs in our KeyStore
+                    String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+                    TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+                    tmf.init((KeyStore) null);
+
+                    // Create an SSLContext that uses our TrustManager
+                    SSLContext sslContext = SSLContext.getInstance("TLS");
+                    sslContext.init(null, tmf.getTrustManagers(), null);
+
+                    // set the SSL options
+                    options.setSocketFactory(sslContext.getSocketFactory());
+                }
+
                 client.connect(options);
                 messageTopic.publish(message);
 
@@ -86,6 +120,9 @@ public final class FireReceiver extends BroadcastReceiver {
                 return null;
 
             } catch (MqttException e) {
+                e.printStackTrace();
+                System.exit(1);
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
             }

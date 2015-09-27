@@ -11,9 +11,9 @@ import android.widget.RadioGroup;
 public class EditActivity extends Activity {
 	
 	String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload;
-    Boolean mRetain;
+    Boolean mSSL, mRetain;
 	EditText mServerText, mPortText, mClientIdText, mUsernameText, mPasswordText, mTopicText, mPayloadText;
-	CheckBox mRetainCheck;
+	CheckBox mSSLCheck, mRetainCheck;
 	String[] mExtra;
 	private RadioGroup mRadioGroup;
 	private int mQoS;
@@ -30,6 +30,7 @@ public class EditActivity extends Activity {
 		mServerText = (EditText) findViewById(R.id.broker_ip);
 		mPortText = (EditText) findViewById(R.id.broker_port);
 		mClientIdText = (EditText) findViewById(R.id.client_id);
+		mSSLCheck = (CheckBox) findViewById(R.id.ssl);
 		mUsernameText = (EditText) findViewById(R.id.username);
 		mPasswordText = (EditText) findViewById(R.id.password);
 		mTopicText = (EditText) findViewById(R.id.message_topic);
@@ -43,6 +44,7 @@ public class EditActivity extends Activity {
 				mServerText.setText(localeBundle.getString(BundleExtraKeys.SERVER));
 				mPortText.setText(localeBundle.getString(BundleExtraKeys.PORT));
 				mClientIdText.setText(localeBundle.getString(BundleExtraKeys.CLIENT_ID));
+				mSSLCheck.setChecked(localeBundle.getBoolean(BundleExtraKeys.SSL));
 				mUsernameText.setText(localeBundle.getString(BundleExtraKeys.USERNAME));
 				mPasswordText.setText(localeBundle.getString(BundleExtraKeys.PASSWORD));
 				mTopicText.setText(localeBundle.getString(BundleExtraKeys.TOPIC));
@@ -60,6 +62,7 @@ public class EditActivity extends Activity {
 		mServer = mServerText.getText().toString();
 		mPort = mPortText.getText().toString();
 		mClientId = mClientIdText.getText().toString();
+		mSSL = (mSSLCheck.isChecked());
 		mUsername = mUsernameText.getText().toString();
 		mPassword = mPasswordText.getText().toString();
 		mTopic = mTopicText.getText().toString();
@@ -74,6 +77,7 @@ public class EditActivity extends Activity {
 			bundle.putString(BundleExtraKeys.SERVER, mServer);
 			bundle.putString(BundleExtraKeys.PORT, mPort);
 			bundle.putString(BundleExtraKeys.CLIENT_ID, mClientId);
+			bundle.putBoolean(BundleExtraKeys.SSL, mSSL);
 			bundle.putString(BundleExtraKeys.USERNAME, mUsername);
 			bundle.putString(BundleExtraKeys.PASSWORD, mPassword);
 			bundle.putString(BundleExtraKeys.TOPIC, mTopic);
