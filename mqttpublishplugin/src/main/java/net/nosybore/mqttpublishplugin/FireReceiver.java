@@ -13,15 +13,10 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.android.gms.security.ProviderInstaller;
 
+import java.security.KeyStore;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 public final class FireReceiver extends BroadcastReceiver {
@@ -64,10 +59,17 @@ public final class FireReceiver extends BroadcastReceiver {
                 System.exit(1);
             }
 
-            new SendMqttMessage().execute();
+            new SendMqttMessage(context).execute();
     }
 	
     class SendMqttMessage extends AsyncTask<Void, Void, Void> {
+
+        // we need the app context in here
+        private Context appContext;
+
+        public SendMqttMessage (Context context) {
+            appContext = context;
+        }
 
 	    @Override
 		protected Void doInBackground(Void... v) {
@@ -102,8 +104,11 @@ public final class FireReceiver extends BroadcastReceiver {
                     TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
                     tmf.init((KeyStore) null);
 
+                    // install the required providers if needed
+                    ProviderInstaller.installIfNeeded(this.appContext);
+
                     // Create an SSLContext that uses our TrustManager
-                    SSLContext sslContext = SSLContext.getInstance("TLS");
+                    SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
                     sslContext.init(null, tmf.getTrustManagers(), null);
 
                     // set the SSL options
