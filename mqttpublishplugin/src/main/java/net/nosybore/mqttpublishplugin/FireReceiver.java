@@ -13,18 +13,25 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import com.google.android.gms.security.ProviderInstaller;
+
+import java.security.KeyStore;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+
 public final class FireReceiver extends BroadcastReceiver {
 	
-	String mServer, mPort, mUsername, mPassword, mTopic, mPayload;
-    Boolean mRetain;
+	String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload, mProtocol;
+    Boolean mSSL, mRetain;
 	private MqttClient client;
     private int mQoS;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-
         	mServer = intent.getStringExtra("Server");
             mPort = intent.getStringExtra("Port");
+            mClientId = intent.getStringExtra("ClientID");
+            mSSL = intent.getBooleanExtra("SSL", false);
         	mUsername = intent.getStringExtra("Username");
         	mPassword = intent.getStringExtra("Password");
         	mTopic = intent.getStringExtra("Topic");
@@ -32,19 +39,37 @@ public final class FireReceiver extends BroadcastReceiver {
             mRetain = intent.getBooleanExtra("Retain", false);
             mQoS = intent.getIntExtra(BundleExtraKeys.QOS, 0);
 
-        	final String BROKER_URL = "tcp://"+mServer+":"+mPort;
+            // select the protocol
+            if (mSSL) {
+                mProtocol = "ssl://";
+            } else {
+                mProtocol = "tcp://";
+            }
+            final String BROKER_URL = mProtocol + mServer + ":" + mPort;
+
+            // set a proper client id if we have none
+            if (mClientId == null || mClientId.trim().equals("")) {
+                mClientId = MqttClient.generateClientId();
+            }
 
             try {
-                client = new MqttClient(BROKER_URL, MqttClient.generateClientId(), new MemoryPersistence());
+                client = new MqttClient(BROKER_URL, mClientId, new MemoryPersistence());
             } catch (MqttException e) {
                 e.printStackTrace();
                 System.exit(1);
             }
 
-            new SendMqttMessage().execute();
+            new SendMqttMessage(context).execute();
     }
 	
     class SendMqttMessage extends AsyncTask<Void, Void, Void> {
+
+        // we need the app context in here
+        private Context appContext;
+
+        public SendMqttMessage (Context context) {
+            appContext = context;
+        }
 
 	    @Override
 		protected Void doInBackground(Void... v) {
@@ -71,6 +96,25 @@ public final class FireReceiver extends BroadcastReceiver {
                     options.setUserName(mUsername);
                     options.setPassword(mPassword.toCharArray());
                 }
+
+                // do we need a SSL connection?
+                if (mSSL) {
+                    // Create a TrustManager that trusts the CAs in our KeyStore
+                    String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+                    TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+                    tmf.init((KeyStore) null);
+
+                    // install the required providers if needed
+                    ProviderInstaller.installIfNeeded(this.appContext);
+
+                    // Create an SSLContext that uses our TrustManager
+                    SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+                    sslContext.init(null, tmf.getTrustManagers(), null);
+
+                    // set the SSL options
+                    options.setSocketFactory(sslContext.getSocketFactory());
+                }
+
                 client.connect(options);
                 messageTopic.publish(message);
 
@@ -81,6 +125,9 @@ public final class FireReceiver extends BroadcastReceiver {
                 return null;
 
             } catch (MqttException e) {
+                e.printStackTrace();
+                System.exit(1);
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
             }

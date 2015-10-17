@@ -48,6 +48,30 @@
         android:layout_gravity="center_horizontal">
 
         <EditText
+            android:id="@+id/client_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="@string/client_id_hint"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ssl_hint"
+            android:id="@+id/ssl"
+            android:layout_weight="0.25"
+            android:layout_margin="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <EditText
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +103,7 @@
         android:inputType="textMultiLine"
         android:gravity="top"
         android:layout_margin="8dp"
-        android:layout_weight="0.66" />
+        android:layout_weight="0.37" />
 
     <RadioGroup
         android:layout_width="match_parent"
