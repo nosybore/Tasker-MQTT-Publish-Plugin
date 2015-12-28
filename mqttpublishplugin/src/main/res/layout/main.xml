@@ -101,9 +101,9 @@
         android:layout_height="0dp"
         android:hint="@string/message_payload_hint"
         android:inputType="textMultiLine"
-        android:gravity="top"
         android:layout_margin="8dp"
-        android:layout_weight="0.37" />
+        android:layout_weight="1"
+        android:gravity="top" />
 
     <RadioGroup
         android:layout_width="match_parent"

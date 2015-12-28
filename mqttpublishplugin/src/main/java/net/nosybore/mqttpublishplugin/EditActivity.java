@@ -70,7 +70,7 @@ public class EditActivity extends Activity {
         mRetain = (mRetainCheck.isChecked());
 		mQoSID = mRadioGroup.getCheckedRadioButtonId();
 
-		if (mServer.length() > 0 && mPort.length() > 0 && mTopic.length() > 0 && mPayload.length() > 0) {
+		if (mServer.length() > 0 && mPort.length() > 0 && mTopic.length() > 0) {
 			Intent resultIntent = new Intent();
 			
 			Bundle bundle = new Bundle();
@@ -100,7 +100,7 @@ public class EditActivity extends Activity {
 			
 			// Tasker's variable replacement
 			if (TaskerPlugin.Setting.hostSupportsOnFireVariableReplacement(this))
-                TaskerPlugin.Setting.setVariableReplaceKeys( bundle, new String [] { BundleExtraKeys.TOPIC, BundleExtraKeys.PAYLOAD } );
+                TaskerPlugin.Setting.setVariableReplaceKeys( bundle, new String [] { BundleExtraKeys.TOPIC, BundleExtraKeys.PAYLOAD, BundleExtraKeys.CLIENT_ID, BundleExtraKeys.PASSWORD, BundleExtraKeys.USERNAME, BundleExtraKeys.PORT, BundleExtraKeys.SERVER });
 			
 			// We define the blurb that will appear in the configuration
 			String blurb = mServer + ":" + mPort + " => " + mTopic + " QoS:" + mQoS;
