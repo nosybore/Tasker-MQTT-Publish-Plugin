@@ -59,13 +59,13 @@ public class EditActivity extends Activity {
 	public void finishActivity(View view) {
 		
 		// We get the information for each field from the settings screen
-		mServer = mServerText.getText().toString();
-		mPort = mPortText.getText().toString();
-		mClientId = mClientIdText.getText().toString();
+		mServer = mServerText.getText().toString().trim();
+		mPort = mPortText.getText().toString().trim();
+		mClientId = mClientIdText.getText().toString().trim();
 		mSSL = (mSSLCheck.isChecked());
 		mUsername = mUsernameText.getText().toString();
 		mPassword = mPasswordText.getText().toString();
-		mTopic = mTopicText.getText().toString();
+		mTopic = mTopicText.getText().toString().trim();
 		mPayload = mPayloadText.getText().toString();
         mRetain = (mRetainCheck.isChecked());
 		mQoSID = mRadioGroup.getCheckedRadioButtonId();
