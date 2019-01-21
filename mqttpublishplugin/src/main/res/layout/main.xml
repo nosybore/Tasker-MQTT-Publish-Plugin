@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/broker_ip_hint"
+            android:inputType="textFilter"
             android:layout_weight="1" />
 
         <EditText
@@ -38,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/broker_port_hint"
+            android:inputType="number"
             android:layout_weight="0.25" />
     </LinearLayout>
 
@@ -53,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/client_id_hint"
+            android:inputType="textFilter"
             android:layout_weight="1" />
 
         <CheckBox
@@ -77,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/username_hint"
+            android:inputType="textFilter"
             android:layout_weight="1" />
 
         <EditText
@@ -85,6 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/password_hint"
+            android:inputType="textPassword"
             android:layout_weight="1" />
     </LinearLayout>
 
@@ -93,7 +98,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:hint="@string/message_topic_hint" />
+        android:hint="@string/message_topic_hint"
+        android:inputType="textFilter" />
     
     <EditText
         android:id="@+id/message_payload"
