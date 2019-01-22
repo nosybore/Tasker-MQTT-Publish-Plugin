@@ -27,6 +27,7 @@
     <string name="broker_port_hint">Port</string>
     <string name="client_id_hint">Client ID</string>
     <string name="ssl_hint">SSL/TLS</string>
+    <string name="ssl_ignore_cert_hint">Skip SSL verification</string>
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="message_topic_hint">Topic</string>

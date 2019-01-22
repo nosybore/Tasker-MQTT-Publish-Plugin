@@ -63,6 +63,14 @@
             android:layout_weight="0.25"
             android:layout_margin="8dp" />
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ssl_ignore_cert_hint"
+            android:id="@+id/ssl_ignore_cert"
+            android:layout_weight="0.25"
+            android:layout_margin="8dp" />
+
     </LinearLayout>
 
     <LinearLayout
