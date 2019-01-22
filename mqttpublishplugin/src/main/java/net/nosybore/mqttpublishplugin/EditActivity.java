@@ -11,9 +11,9 @@ import android.widget.RadioGroup;
 public class EditActivity extends Activity {
 	
 	String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload;
-    Boolean mSSL, mRetain;
+    Boolean mSSL, mSSLIgnoreCert, mRetain;
 	EditText mServerText, mPortText, mClientIdText, mUsernameText, mPasswordText, mTopicText, mPayloadText;
-	CheckBox mSSLCheck, mRetainCheck;
+	CheckBox mSSLCheck, mSSLIgnoreCertCheck, mRetainCheck;
 	String[] mExtra;
 	private RadioGroup mRadioGroup;
 	private int mQoS;
@@ -31,6 +31,7 @@ public class EditActivity extends Activity {
 		mPortText = (EditText) findViewById(R.id.broker_port);
 		mClientIdText = (EditText) findViewById(R.id.client_id);
 		mSSLCheck = (CheckBox) findViewById(R.id.ssl);
+		mSSLIgnoreCertCheck = (CheckBox) findViewById(R.id.ssl_ignore_cert);
 		mUsernameText = (EditText) findViewById(R.id.username);
 		mPasswordText = (EditText) findViewById(R.id.password);
 		mTopicText = (EditText) findViewById(R.id.message_topic);
@@ -45,6 +46,7 @@ public class EditActivity extends Activity {
 				mPortText.setText(localeBundle.getString(BundleExtraKeys.PORT));
 				mClientIdText.setText(localeBundle.getString(BundleExtraKeys.CLIENT_ID));
 				mSSLCheck.setChecked(localeBundle.getBoolean(BundleExtraKeys.SSL));
+				mSSLIgnoreCertCheck.setChecked(localeBundle.getBoolean(BundleExtraKeys.SSL_IGNORE_CERT));
 				mUsernameText.setText(localeBundle.getString(BundleExtraKeys.USERNAME));
 				mPasswordText.setText(localeBundle.getString(BundleExtraKeys.PASSWORD));
 				mTopicText.setText(localeBundle.getString(BundleExtraKeys.TOPIC));
@@ -55,14 +57,15 @@ public class EditActivity extends Activity {
 		}
 		setTitle("Settings");
 	}
-	
+
 	public void finishActivity(View view) {
-		
+
 		// We get the information for each field from the settings screen
 		mServer = mServerText.getText().toString();
 		mPort = mPortText.getText().toString();
 		mClientId = mClientIdText.getText().toString();
 		mSSL = (mSSLCheck.isChecked());
+		mSSLIgnoreCert = (mSSLIgnoreCertCheck.isChecked());
 		mUsername = mUsernameText.getText().toString();
 		mPassword = mPasswordText.getText().toString();
 		mTopic = mTopicText.getText().toString();
@@ -78,6 +81,7 @@ public class EditActivity extends Activity {
 			bundle.putString(BundleExtraKeys.PORT, mPort);
 			bundle.putString(BundleExtraKeys.CLIENT_ID, mClientId);
 			bundle.putBoolean(BundleExtraKeys.SSL, mSSL);
+			bundle.putBoolean(BundleExtraKeys.SSL_IGNORE_CERT, mSSLIgnoreCert);
 			bundle.putString(BundleExtraKeys.USERNAME, mUsername);
 			bundle.putString(BundleExtraKeys.PASSWORD, mPassword);
 			bundle.putString(BundleExtraKeys.TOPIC, mTopic);

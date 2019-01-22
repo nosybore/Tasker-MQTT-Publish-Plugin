@@ -1,5 +1,6 @@
 package net.nosybore.mqttpublishplugin;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,28 +17,33 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import com.google.android.gms.security.ProviderInstaller;
 
 import java.security.KeyStore;
+
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 public final class FireReceiver extends BroadcastReceiver {
-	
-	String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload, mProtocol;
-    Boolean mSSL, mRetain;
-	private MqttClient client;
+
+    String mServer, mPort, mClientId, mUsername, mPassword, mTopic, mPayload, mProtocol;
+    Boolean mSSL, mSSLIgnoreCert, mRetain;
+    private MqttClient client;
     private int mQoS;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        	mServer = intent.getStringExtra("Server");
-            mPort = intent.getStringExtra("Port");
-            mClientId = intent.getStringExtra("ClientID");
-            mSSL = intent.getBooleanExtra("SSL", false);
-        	mUsername = intent.getStringExtra("Username");
-        	mPassword = intent.getStringExtra("Password");
-        	mTopic = intent.getStringExtra("Topic");
-        	mPayload = intent.getStringExtra("Payload");
-            mRetain = intent.getBooleanExtra("Retain", false);
-            mQoS = intent.getIntExtra(BundleExtraKeys.QOS, 0);
+        mServer = intent.getStringExtra("Server");
+        mPort = intent.getStringExtra("Port");
+        mClientId = intent.getStringExtra("ClientID");
+        mSSL = intent.getBooleanExtra("SSL", false);
+        mSSLIgnoreCert = intent.getBooleanExtra("SSLIgnoreCert", false);
+        mUsername = intent.getStringExtra("Username");
+        mPassword = intent.getStringExtra("Password");
+        mTopic = intent.getStringExtra("Topic");
+        mPayload = intent.getStringExtra("Payload");
+        mRetain = intent.getBooleanExtra("Retain", false);
+        mQoS = intent.getIntExtra(BundleExtraKeys.QOS, 0);
 
             // select the protocol
             if (mSSL) {
@@ -112,7 +118,37 @@ public final class FireReceiver extends BroadcastReceiver {
                     sslContext.init(null, tmf.getTrustManagers(), null);
 
                     // set the SSL options
-                    options.setSocketFactory(sslContext.getSocketFactory());
+                    SSLSocketFactory socketFactory = sslContext.getSocketFactory();
+
+                    if (mSSLIgnoreCert) {
+                        // Create a trust manager that does not validate certificate chains
+                        final TrustManager[] trustAllCerts = new TrustManager[]{
+                                new X509TrustManager() {
+                                    @SuppressLint("TrustAllX509TrustManager")
+                                    @Override
+                                    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                                    }
+
+                                    @SuppressLint("TrustAllX509TrustManager")
+                                    @Override
+                                    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                                    }
+
+                                    @Override
+                                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                                        return new java.security.cert.X509Certificate[]{};
+                                    }
+                                }
+                        };
+
+                        // Install the all-trusting trust manager
+                        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+                        // Create an ssl socket factory with our all-trusting manager
+                        socketFactory = sslContext.getSocketFactory();
+                    }
+
+                    options.setSocketFactory(socketFactory);
                 }
 
                 client.connect(options);
